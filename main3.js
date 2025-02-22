@@ -1,3 +1,8 @@
+//Buenas, en ésta nueva entrega me ayude mucho con mis conocimientos en html basados en el curso de desarrollo web, tuve que ver algunas clases de vuelta
+//para tener todo un poco mas fresco, de igual manera habia algunas cosas que no lograba enlazar sin escribir codigo en la seccion de html
+//y lo que pude enlazar me ayude con la clase de doom y IA.
+//Tambien cambie la orientacion de la pasteleria, ya que me interesaria mas enfocarla en un solo producto que destaque antes que abarcar mucho y apretar poco.
+
 
 
 
