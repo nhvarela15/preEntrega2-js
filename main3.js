@@ -64,11 +64,11 @@ function actualizarCarrito() {
         let li = document.createElement("li");
         li.textContent = `${macaron.nombre} - ARG$${macaron.precio}`;
         
-        let btnEliminar = document.createElement("button");
-        btnEliminar.textContent = "Eliminar";
-        btnEliminar.onclick = () => eliminarMacaron(index);
+        let botonEliminar = document.createElement("button");
+        botonEliminar.textContent = "Eliminar";
+        botonEliminar.onclick = () => eliminarMacaron(index);
         
-        li.appendChild(btnEliminar);
+        li.appendChild(botonEliminar);
         lista.appendChild(li);
     });
 
@@ -94,16 +94,15 @@ function abonarCuenta() {
 
     let cambio = montoPago - cuenta;
     mensajeCompra.textContent = `Compra exitosa. Tu vuelto es de ARG$${cambio.toFixed(2)}.`;
-    mensajeCompra.style.color = "green";
+    mensajeCompra.style.color = "black";
+    let resumen = "Tu total de compra es dé:\n";
 
-    // Mostrar resumen de compra
-    let resumen = "Resumen de tu compra:\n";
     carrito.forEach(macaron => {
         resumen += `- ${macaron.nombre} (ARG$${macaron.precio})\n`;
     });
     alert(resumen);
 
-    // Limpiar compra
+
     carrito = [];
     cuenta = 0;
     localStorage.removeItem("carrito");
