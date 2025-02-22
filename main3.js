@@ -16,7 +16,6 @@ const macarons = [
     { id: 9, nombre: "Macaron de Melocotón", precio: 900, color: "naranja" }
 ];
 
-// Cargar compras anteriores
 function cargarCompraDesdeLocalStorage() {
     const carritoGuardado = localStorage.getItem("carrito");
     if (carritoGuardado) {
@@ -26,12 +25,11 @@ function cargarCompraDesdeLocalStorage() {
     }
 }
 
-// Guardar en Local Storage
+
 function guardarCompraEnLocalStorage() {
     localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
-// Mostrar opciones en el select
 function cargarOpcionesMacarons() {
     const select = document.getElementById("macaronSelect");
     macarons.forEach(macaron => {
@@ -42,7 +40,6 @@ function cargarOpcionesMacarons() {
     });
 }
 
-// Agregar macaron al carrito
 function seleccionarMacaron() {
     const select = document.getElementById("macaronSelect");
     let macaronId = parseInt(select.value);
@@ -54,7 +51,6 @@ function seleccionarMacaron() {
     actualizarCarrito();
 }
 
-// Actualizar la lista del carrito
 function actualizarCarrito() {
     const lista = document.getElementById("carritoLista");
     lista.innerHTML = "";
@@ -74,7 +70,6 @@ function actualizarCarrito() {
     document.getElementById("totalCuenta").textContent = `Total: ARG$${cuenta}`;
 }
 
-// Eliminar un macaron del carrito
 function eliminarMacaron(index) {
     cuenta -= carrito[index].precio;
     carrito.splice(index, 1);
@@ -82,7 +77,6 @@ function eliminarMacaron(index) {
     actualizarCarrito();
 }
 
-// Pagar y finalizar compra
 function abonarCuenta() {
     let montoPago = parseFloat(document.getElementById("montoPago").value);
     let mensajeCompra = document.getElementById("mensajeCompra");
@@ -111,7 +105,6 @@ function abonarCuenta() {
     actualizarCarrito();
 }
 
-// Inicializar la página
 document.addEventListener("DOMContentLoaded", () => {
     cargarOpcionesMacarons();
     cargarCompraDesdeLocalStorage();
