@@ -1,98 +1,118 @@
-let titulo = document.createElement("h1")
-titulo.innerHTML=`<h1> Bienvenidos a Dolcie Voglie </h1>`
-document.body.appendChild(titulo)
-
-
-
-
-
 
 
 
 let cuenta = 0;
+let carrito = [];
 
-let postres = [
-    { postre: "Macaron ", valor: 1200 },
-    { postre: "Cheesecake ", valor: 15000 },
-    { postre: "Crumble de Manzana ", valor: 13000 },
-    { postre: "Cuorelato ", valor: 1500 },
-    { postre: "Chiboust de Frutos Rojos ", valor: 17000 },
-    { postre: "LemonPie ", valor: 12500 }
+const macarons = [
+    { id: 1, nombre: "Macaron de Pistacho", precio: 1500, color: "verde" },
+    { id: 2, nombre: "Macaron de Cappuccino", precio: 900, color: "café" },
+    { id: 3, nombre: "Macaron de Frutos Rojos", precio: 900, color: "violeta" },
+    { id: 4, nombre: "Macaron de Coco y Dulce De Leche", precio: 1200, color: "blanco con café" },
+    { id: 5, nombre: "Macaron de Maní", precio: 1000, color: "marrón" },
+    { id: 6, nombre: "Macaron de Moka", precio: 1400, color: "negro" },
+    { id: 7, nombre: "Macaron de Baileys", precio: 1500, color: "crema" },
+    { id: 8, nombre: "Macaron de Caramel", precio: 1300, color: "dorado" },
+    { id: 9, nombre: "Macaron de Melocotón", precio: 900, color: "naranja" }
 ];
 
-function cartaPasteleria() {
-    let stockPostres = "Estas son las delicias que tenemos disponibles a la venta!\n";
-    for (let i = 0; i < postres.length; i++) {
-        stockPostres += `${i + 1}- ${postres[i].postre} / su valor es de ARG$${postres[i].valor}\n`;
+// Cargar compras anteriores
+function cargarCompraDesdeLocalStorage() {
+    const carritoGuardado = localStorage.getItem("carrito");
+    if (carritoGuardado) {
+        carrito = JSON.parse(carritoGuardado);
+        cuenta = carrito.reduce((total, item) => total + item.precio, 0);
+        actualizarCarrito();
     }
-    alert(stockPostres);
 }
 
-function seleccionarPostre() {
-    let numeroPostre = parseInt(prompt("Ingresa el número del producto que deseas (1-6):"));
-
-    if (isNaN(numeroPostre) || numeroPostre < 1 || numeroPostre > postres.length) {
-        alert("El número ingresado es inválido. Inténtalo nuevamente.");
-        return seleccionarPostre();
-    }
-
-    let postreElegido = postres[numeroPostre - 1];
-    cuenta += postreElegido.valor;
-    alert(`Tu ${postreElegido.postre} será empaquetado cuidadosamente.`);
+// Guardar en Local Storage
+function guardarCompraEnLocalStorage() {
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 }
 
+// Mostrar opciones en el select
+function cargarOpcionesMacarons() {
+    const select = document.getElementById("macaronSelect");
+    macarons.forEach(macaron => {
+        let option = document.createElement("option");
+        option.value = macaron.id;
+        option.textContent = `${macaron.nombre} - ARG$${macaron.precio}`;
+        select.appendChild(option);
+    });
+}
 
-function mostrarPostresBaratos() {
-    let precioMaximo = parseInt(prompt("¿Cuál es el precio máximo que deseas pagar por un postre?"));
+// Agregar macaron al carrito
+function seleccionarMacaron() {
+    const select = document.getElementById("macaronSelect");
+    let macaronId = parseInt(select.value);
+    let macaronElegido = macarons.find(macaron => macaron.id === macaronId);
+    
+    carrito.push(macaronElegido);
+    cuenta += macaronElegido.precio;
+    guardarCompraEnLocalStorage();
+    actualizarCarrito();
+}
 
-    if (isNaN(precioMaximo) || precioMaximo <= 0) {
-        alert("Por favor ingresa un número válido.");
+// Actualizar la lista del carrito
+function actualizarCarrito() {
+    const lista = document.getElementById("carritoLista");
+    lista.innerHTML = "";
+
+    carrito.forEach((macaron, index) => {
+        let li = document.createElement("li");
+        li.textContent = `${macaron.nombre} - ARG$${macaron.precio}`;
+        
+        let btnEliminar = document.createElement("button");
+        btnEliminar.textContent = "Eliminar";
+        btnEliminar.onclick = () => eliminarMacaron(index);
+        
+        li.appendChild(btnEliminar);
+        lista.appendChild(li);
+    });
+
+    document.getElementById("totalCuenta").textContent = `Total: ARG$${cuenta}`;
+}
+
+// Eliminar un macaron del carrito
+function eliminarMacaron(index) {
+    cuenta -= carrito[index].precio;
+    carrito.splice(index, 1);
+    guardarCompraEnLocalStorage();
+    actualizarCarrito();
+}
+
+// Pagar y finalizar compra
+function abonarCuenta() {
+    let montoPago = parseFloat(document.getElementById("montoPago").value);
+    let mensajeCompra = document.getElementById("mensajeCompra");
+
+    if (isNaN(montoPago) || montoPago < cuenta) {
+        mensajeCompra.textContent = "El monto ingresado es insuficiente o inválido.";
+        mensajeCompra.style.color = "red";
         return;
     }
 
-    let postresBaratos = postres.filter(postre => postre.valor <= precioMaximo);
+    let cambio = montoPago - cuenta;
+    mensajeCompra.textContent = `Compra exitosa. Tu vuelto es de ARG$${cambio.toFixed(2)}.`;
+    mensajeCompra.style.color = "green";
 
-    if (postresBaratos.length === 0) {
-        alert("Lo sentimos, no hay postres en ese rango de precio.");
-    } else {
-        let mensaje = "Estos son los postres dentro de tu rango de precio:\n";
-        for (let i = 0; i < postresBaratos.length; i++) {
-            mensaje += `${postresBaratos[i].postre} - Precio: ARG$${postresBaratos[i].valor}\n`;
-        }
-        alert(mensaje);
-    }
-}
+    // Mostrar resumen de compra
+    let resumen = "Resumen de tu compra:\n";
+    carrito.forEach(macaron => {
+        resumen += `- ${macaron.nombre} (ARG$${macaron.precio})\n`;
+    });
+    alert(resumen);
 
-function abonarCuenta() {
-    let efectivo = parseFloat(prompt(`Tu cuenta final es de ARG$${cuenta}. Ingresa el efectivo:`));
-
-    while (isNaN(efectivo) || efectivo < cuenta) {
-        alert("El monto ingresado es insuficiente o inválido.");
-        efectivo = parseFloat(prompt(`Por favor, ingresa un monto válido. Tu cuenta es de ARG$${cuenta}:`));
-    }
-
-    let cambio = efectivo - cuenta;
-    alert(`Muchas gracias por tu compra! Tu vuelto es de ARG$${cambio}`);
-}
-
-function ejecutarCompra() {
+    // Limpiar compra
+    carrito = [];
     cuenta = 0;
-    alert("Te damos la bienvenida a Dolcie Voglie!");
-
-    let verBaratos = prompt("¿Quieres ver solo postres más baratos de un precio específico? (si/no)").toLowerCase();
-    if (verBaratos === "si") {
-        mostrarPostresBaratos();
-    }
-
-    let continuarCompra = "si";
-    while (continuarCompra === "si") {
-        cartaPasteleria();
-        seleccionarPostre();
-        continuarCompra = prompt("¿Te gustaría seguir comprando? (si/no)").toLowerCase();
-    }
-
-    abonarCuenta();
+    localStorage.removeItem("carrito");
+    actualizarCarrito();
 }
 
-
-ejecutarCompra();
+// Inicializar la página
+document.addEventListener("DOMContentLoaded", () => {
+    cargarOpcionesMacarons();
+    cargarCompraDesdeLocalStorage();
+});

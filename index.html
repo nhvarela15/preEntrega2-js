@@ -3,9 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>Dolcie Voglie</title>
 </head>
 <body>
-    <script src="main.js"></script>
+    <h1>Bienvenido a Dolcie Voglie</h1>
+
+    <h2>Selecciona un macaron:</h2>
+    <select id="macaronSelect"></select>
+    <button onclick="seleccionarMacaron()">Agregar al carrito</button>
+
+    <h2>Carrito de Compras</h2>
+    <ul id="carritoLista"></ul>
+    <p id="totalCuenta">Total: ARG$0</p>
+
+    <h2>Pago</h2>
+    <input type="number" id="montoPago" placeholder="Ingresa el monto">
+    <button onclick="abonarCuenta()">Pagar</button>
+
+    <p id="mensajeCompra"></p>
+
+<script src="main3.js"></script>
 </body>
 </html>
